@@ -33,19 +33,72 @@ The application will be available at `http://localhost:8080`.
 
 The following are the major API endpoints. For detailed information, please refer to the controller classes.
 
-*   **Auth Controller (`/api/auth`)**
-    *   `POST /register`: Register a new user.
-    *   `POST /login`: Authenticate a user and get a JWT token.
-*   **Category Controller (`/api/categories`)**
-    *   `GET /`: Get all categories for the logged-in user.
-    *   `POST /`: Create a new category.
-*   **Goal Controller (`/api/goals`)**
-    *   `GET /`: Get all goals for the logged-in user.
-    *   `POST /`: Create a new goal.
-*   **Transaction Controller (`/api/transactions`)**
-    *   `GET /`: Get all transactions for the logged-in user.
-    *   `POST /`: Create a new transaction.
-*   **Report Controller (`/api/reports`)**
-    *   `GET /summary`: Get a summary report of transactions.
+### 1. Register a new user
 
-**Note:** This is a sample README file and the endpoints are based on the file names in the `controllers` directory. You may need to adjust the details based on the actual implementation.
+```bash
+curl -i -X POST https://syfe-task.onrender.com/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"username":"shubham@example.com","password":"password123","fullName":"Shubham","phoneNumber":"1234567890"}'
+
+```
+
+### 2. Log in (saves the session cookie in `cookies.txt`)
+
+```bash
+curl -i -X POST https://syfe-task.onrender.com/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"shubham@example.com","password":"password123"}' \
+  -c cookies.txt
+
+```
+
+### 3. Fetch default + custom categories (reads the cookie from `cookies.txt`)
+
+```bash
+curl -i -X GET https://syfe-task.onrender.com/api/categories -b cookies.txt
+
+```
+
+### 4. Add a custom category
+
+```bash
+curl -i -X POST https://syfe-task.onrender.com/api/categories \
+  -b cookies.txt \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Bonus","type":"INCOME"}'
+
+```
+
+### 5. Add a transaction
+
+```bash
+curl -i -X POST https://syfe-task.onrender.com/api/transactions \
+  -b cookies.txt \
+  -H "Content-Type: application/json" \
+  -d '{"amount":5000.00,"date":"2026-05-23","categoryName":"Salary","description":"May Salary Payout"}'
+
+```
+
+### 6. Create a Savings Goal
+
+```bash
+curl -i -X POST https://syfe-task.onrender.com/api/goals \
+  -b cookies.txt \
+  -H "Content-Type: application/json" \
+  -d '{"goalName":"MacBook","targetAmount":2000.00,"targetDate":"2026-12-31"}'
+
+```
+
+### 7. Fetch Savings Goal & Live Progress
+
+```bash
+curl -i -X GET https://syfe-task.onrender.com/api/goals -b cookies.txt
+
+```
+
+### 8. Generate a Monthly Report
+
+```bash
+curl -i -X GET https://syfe-task.onrender.com/api/reports/monthly/2026/5 -b cookies.txt
+
+```
